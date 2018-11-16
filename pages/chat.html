@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CHAT</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+
+    <script>
+  // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDXRb_wKghAloYmMnua7DFONlHLRiFDwdA",
+        authDomain: "html-bcbe5.firebaseapp.com",
+        databaseURL: "https://html-bcbe5.firebaseio.com",
+        projectId: "html-bcbe5",
+        storageBucket: "",
+        messagingSenderId: "636248004359"
+    };
+    firebase.initializeApp(config);
+    var database = firebase.database();
+    var list = [];
+    database.ref("Msgs/").on("value", function(snapshot){
+        $("#abc").html("");
+        snapshot.forEach(function (child) {
+            list.push(child)
+            $("#abc").append(
+                                    '<li class="left clearfix">'+
+                                    '<span class="chat-img pull-left">'+
+                                        '<img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />'+
+                                    '</span>'+
+                                    '<div class="chat-body clearfix">'+
+                                        '<div class="header">'+
+                                            '<strong class="primary-font">'+'Jack Sparrow'+'</strong>'+
+                                            '<small class="pull-right text-muted">'+
+                                                '<i class="fa fa-clock-o fa-fw">'+'</i>'+ '12 mins ago' +
+                                            '</small>'+
+                                        '</div>'+
+                                        '<p>'+
+                                            child.val().text +
+                                        '</p>'+
+                                    '</div>'+
+                                '</li>');
+
+
+
+        });
+        $("#v").scrollTop(1000000000000000000);
+
+    });
+
+
+    
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            $("#btn-chat").on("click", make);
+
+            $("#btn-input").keydown( function (e) {
+                if(e.keyCode == '13') {
+                    make();
+                }
+            });
+
+            function make () {
+
+                if ($("#btn-input").val() == '') {
+                    return;
+                }
+                
+                database.ref("Msgs/").push().set({text:$("#btn-input").val()});
+                $("#btn-input").val('');
+                
+            }
+
+        });
+
+
+    </script>
+
+
+
+</head>
+
+<body>
+
+<div class="chat-panel panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-comments fa-fw"></i> Chat
+                            <div class="btn-group pull-right">
+                                
+                                
+                            </div>
+                        </div>
+
+
+                        <!-- <div id ="abc" style="max-height: 500px">
+                            
+                        </div> -->
+                        
+                        <div class="panel-body" id="v">
+                            <ul class="chat" id="abc">
+
+                            </ul>
+                        </div>
+
+                        <!-- /.panel-body -->
+                        <div class="panel-footer">
+                            <div class="input-group">
+                                <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-warning btn-sm" id="btn-chat">
+                                        Send
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- /.panel-footer -->
+
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="../vendor/raphael/raphael.min.js"></script>
+    <script src="../vendor/morrisjs/morris.min.js"></script>
+    <script src="../data/morris-data.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>
