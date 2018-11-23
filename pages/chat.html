@@ -48,35 +48,7 @@
     };
     firebase.initializeApp(config);
     var database = firebase.database();
-    var list = [];
-    database.ref("Msgs/").on("value", function(snapshot){
-        $("#abc").html("");
-        snapshot.forEach(function (child) {
-            list.push(child)
-            $("#abc").append(
-                                    '<li class="left clearfix">'+
-                                    '<span class="chat-img pull-left">'+
-                                        '<img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />'+
-                                    '</span>'+
-                                    '<div class="chat-body clearfix">'+
-                                        '<div class="header">'+
-                                            '<strong class="primary-font">'+'Jack Sparrow'+'</strong>'+
-                                            '<small class="pull-right text-muted">'+
-                                                '<i class="fa fa-clock-o fa-fw">'+'</i>'+ '12 mins ago' +
-                                            '</small>'+
-                                        '</div>'+
-                                        '<p>'+
-                                            child.val().text +
-                                        '</p>'+
-                                    '</div>'+
-                                '</li>');
-
-
-
-        });
-        $("#v").scrollTop(1000000000000000000);
-
-    });
+    
 
 
     
@@ -95,18 +67,93 @@
                 }
             });
 
+            $("#logclick").on("click", login);
+
             function make () {
 
                 if ($("#btn-input").val() == '') {
                     return;
                 }
                 
-                database.ref("Msgs/").push().set({text:$("#btn-input").val()});
+                var data = {};
+                data.text = $("#btn-input").val();
+                data.nick = nick;
+                database.ref("Msgs/").push().set(data);
                 $("#btn-input").val('');
                 
             }
 
+            function login () {
+
+                if ($("#nick2").val() == '') {
+                    return;
+                }
+
+                nick = $("#nick2").val();
+                $("#login-all").hide();
+                $("#chat-all").show();
+                $("#user-nick").text(nick+ '님');
+                maketext();
+            }
+
+
+            function maketext () {
+                database.ref("Msgs/").on("value", function(snapshot){
+                    $("#abc").html("");
+                    snapshot.forEach(function (child) {
+
+                        if (child.val().nick == nick) {
+                            $("#abc").append(
+                                            
+
+                                    '<li class="right clearfix">'+
+                                    '<span class="chat-img pull-right">'+
+                                        '<img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" />'+
+                                    '</span>'+
+                                    '<div class="chat-body clearfix">'+
+                                        '<div class="header">'+
+                                            '<small class=" text-muted">'+
+                                                '<i class="fa fa-clock-o fa-fw"></i> 13 mins ago</small>'+
+                                            '<strong class="pull-right primary-font">'+child.val().nick+'</strong>'+
+                                        '</div>'+
+                                        '<p>'+
+                                            child.val().text+
+                                        '</p>'+
+                                    '</div>'+
+                                '</li>'
+                                        );
+                        }
+
+                        else if (child.val().nick != nick) {
+                            $("#abc").append(
+                                            '<li class="left clearfix">'+
+                                            '<span class="chat-img pull-left">'+
+                                                '<img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />'+
+                                            '</span>'+
+                                            '<div class="chat-body clearfix">'+
+                                                '<div class="header">'+
+                                                    '<strong class="primary-font">'+child.val().nick+'</strong>'+
+                                                    '<small class="pull-right text-muted">'+
+                                                        '<i class="fa fa-clock-o fa-fw">'+'</i>'+ '12 mins ago' +
+                                                    '</small>'+
+                                                '</div>'+
+                                                '<p>'+
+                                                    child.val().text +
+                                                '</p>'+
+                                            '</div>'+
+                                        '</li>');
+                        }
+
+
+
+                    });
+                $("#v").scrollTop(1000000000000000000);
+
+                });
+            }
+
         });
+
 
 
     </script>
@@ -117,9 +164,40 @@
 
 <body>
 
-<div class="chat-panel panel panel-default">
+
+    <!-- <div style="margin-left: 30px"> 닉네임 </div>
+    <input type="text" id="nick" style="margin-left: 30px"/>
+    <input type="button" id="start-btn" style="margin-left:50px " / value="시작"> -->
+
+    <div class="container" id="login-all">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">사용할 닉네임을 적으세요</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="닉네임" id="nick2" name="email" type="email" autofocus>
+                                </div>
+                                
+                                <a class="btn btn-lg btn-success btn-block" id= "logclick">시작</a>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-panel panel panel-default" id="chat-all" style="margin-top: 15px; display: none; width: 500px">
+
+
                         <div class="panel-heading">
                             <i class="fa fa-comments fa-fw"></i> Chat
+                            <div id="user-nick"> aaa님</div>
                             <div class="btn-group pull-right">
                                 
                                 
